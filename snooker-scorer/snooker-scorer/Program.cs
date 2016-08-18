@@ -7,6 +7,8 @@ namespace snooker_scorer
     {
         static void Main(string[] args)
         {
+            Bootstrapper.InitializeActorSystem();
+
             using (var host = new NancyHost(new Uri("http://localhost:1147")))
             {
                 host.Start();

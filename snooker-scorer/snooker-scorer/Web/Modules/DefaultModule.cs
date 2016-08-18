@@ -12,11 +12,11 @@ namespace snooker_scorer.Web.Modules
 {
     public class DefaultModule : NancyModule
     {
+        private IActorRef logger;
+
         public DefaultModule()
         {
-            var config = ConfigurationFactory.ParseString(@"akka.suppress-json-serializer-warning:true");
-            var actorSystem = ActorSystem.Create("snooker", config);
-            var logger = actorSystem.ActorOf<LoggingActor>("logger");
+            logger = ActorSystemRefs.Actors.Logger;
 
             Get["/status"] = _ =>
             {
@@ -25,6 +25,15 @@ namespace snooker_scorer.Web.Modules
                     status = "ok"
                 });
             };
+            /*
+            Get["/game/{gameId}"] = id => GetGame(id);
+            Post["/game"] = CreateGame();
+            Post["/game/{gameId}/player"] = CreatePlayer(gameId);
+
+            Post["/game/{gameId}/pot"]=HandlePot();
+            Post["/game/{gameId}/miss"]=HandleMiss();
+            Post["/game/{gameId}/foul"]=HandleFoul();
+            */
         }
     }
 }
