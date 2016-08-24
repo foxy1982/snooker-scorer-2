@@ -4,11 +4,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using snooker_scorer.Actors;
 using snooker_scorer.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace snooker_scorer_test.Actors
 {
@@ -22,9 +17,9 @@ namespace snooker_scorer_test.Actors
         }
 
         [Test]
-        public void ShouldReturnZeroForCurrentBreakAfterNoShot()
+        public void ShouldReturnZeroForCurrentBreakAtStart()
         {
-            var breakCounter = Sys.ActorOf(Props.Create(() => new BreakCounterActor()));
+            var breakCounter = ActorOfAsTestActorRef<BreakCounterActor>();
             breakCounter.Tell(new BreakCounterActor.CurrentBreakRequest());
             ExpectMsg<BreakCounterActor.CurrentBreak>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(0));
         }
@@ -32,7 +27,7 @@ namespace snooker_scorer_test.Actors
         [Test]
         public void ShouldReturnCurrentBreakAfterSingleShot()
         {
-            var breakCounter = Sys.ActorOf(Props.Create(() => new BreakCounterActor()));
+            var breakCounter = ActorOfAsTestActorRef<BreakCounterActor>();
             breakCounter.Tell(new ScoringShot(5));
             ExpectMsg<BreakCounterActor.CurrentBreak>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(5));
             breakCounter.Tell(new BreakCounterActor.CurrentBreakRequest());

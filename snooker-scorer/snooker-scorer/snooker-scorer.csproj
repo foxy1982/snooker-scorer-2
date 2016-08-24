@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorSystemRefs.cs" />
+    <Compile Include="Actors\FoulCounterActor.Messages.cs" />
     <Compile Include="Actors\BreakCounterActor.cs" />
     <Compile Include="Actors\BreakCounterActor.Messages.cs" />
     <Compile Include="Actors\FoulCounterActor.cs" />
