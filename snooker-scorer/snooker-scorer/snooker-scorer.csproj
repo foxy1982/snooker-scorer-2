@@ -70,6 +70,7 @@
     <Compile Include="Actors\FoulCounterActor.cs" />
     <Compile Include="Actors\FoulHandlerActor.cs" />
     <Compile Include="Actors\GameActor.cs" />
+    <Compile Include="Actors\GameActor.Messages.cs" />
     <Compile Include="Actors\GameManagerActor.cs" />
     <Compile Include="Actors\LoggingActor.cs" />
     <Compile Include="Actors\PlayerActor.cs" />

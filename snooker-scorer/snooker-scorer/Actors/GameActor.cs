@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace snooker_scorer.Actors
 {
-    public class GameActor : ReceiveActor
+    public partial class GameActor : ReceiveActor
     {
         private readonly IActorRef player1;
         private readonly IActorRef player2;
@@ -38,36 +38,6 @@ namespace snooker_scorer.Actors
             });
 
             task.PipeTo(Sender, Self);
-        }
-
-        public class Status
-        {
-            public readonly Player Player1;
-            public readonly Player Player2;
-
-            public Status(Player player1, Player player2)
-            {
-                Player1 = player1;
-                Player2 = player2;
-            }
-        }
-
-        public class Player
-        {
-            public readonly string Name;
-            public readonly int Score;
-
-            public Player(string name)
-            {
-                Name = name;
-            }
-        }
-
-        public class StatusRequest
-        {
-            public StatusRequest()
-            {
-            }
         }
 
         public static Props Props(string player1, string player2)

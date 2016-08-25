@@ -2,11 +2,6 @@
 using FluentAssertions;
 using NUnit.Framework;
 using snooker_scorer.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace snooker_scorer_test.Actors
 {
@@ -20,7 +15,7 @@ namespace snooker_scorer_test.Actors
         }
 
         [Test]
-        public void ShouldRespondWithName()
+        public void ShouldRespondWithNameAndNoScoreWhenCreated()
         {
             var name = "Lex";
             var player = ActorOfAsTestActorRef<PlayerActor>(PlayerActor.Props(name));
