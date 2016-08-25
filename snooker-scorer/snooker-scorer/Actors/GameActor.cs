@@ -22,6 +22,8 @@ namespace snooker_scorer.Actors
 
         private void HandleStatusRequest(StatusRequest msg)
         {
+            var sender = Sender;
+
             var task = Task.Run(async () =>
             {
                 var player1Task = player1.Ask(new PlayerActor.StatusRequest());
@@ -37,7 +39,7 @@ namespace snooker_scorer.Actors
                     new Player(player2Info.Name));
             });
 
-            task.PipeTo(Sender, Self);
+            task.PipeTo(sender, Self);
         }
 
         public static Props Props(string player1, string player2)

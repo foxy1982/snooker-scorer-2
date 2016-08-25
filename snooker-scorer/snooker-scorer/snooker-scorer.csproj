@@ -77,7 +77,6 @@
     <Compile Include="Actors\PotHandlerActor.cs" />
     <Compile Include="Actors\ScoringActor.cs" />
     <Compile Include="Actors\ShotRecorderActor.cs" />
-    <Compile Include="Actors\TurnChangeHandlerActor.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Messages\ScoringShot.cs" />
     <Compile Include="Program.cs" />
