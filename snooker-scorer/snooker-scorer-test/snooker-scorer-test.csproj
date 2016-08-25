@@ -75,6 +75,7 @@
     <Compile Include="Actors\BreakCounterActorTests.cs" />
     <Compile Include="Actors\FoulCounterActorTests.cs" />
     <Compile Include="Actors\GameManagerActorTests.cs" />
+    <Compile Include="Actors\PlayerActorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

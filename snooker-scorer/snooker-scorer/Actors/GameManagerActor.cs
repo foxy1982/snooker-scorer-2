@@ -4,26 +4,24 @@ namespace snooker_scorer.Actors
 {
     public partial class GameManagerActor : ReceiveActor
     {
-        private int _numberOfGames;
-
         public GameManagerActor()
         {
             Receive<CreateGameRequest>(msg =>
             {
-                _numberOfGames++;
-                var game = Context.ActorOf<GameActor>();
+                var game = Context.ActorOf(GameActor.Props(msg.Player1, msg.Player2));
                 Sender.Tell(new CreateGameResponse(game));
-            });
-            Receive<GameCountRequest>(msg =>
-            {
-                Sender.Tell(new GameCountResponse(_numberOfGames));
             });
         }
 
         public class CreateGameRequest
         {
-            public CreateGameRequest()
+            public readonly string Player1;
+            public readonly string Player2;
+
+            public CreateGameRequest(string player1, string player2)
             {
+                Player1 = player1;
+                Player2 = player2;
             }
         }
 
@@ -34,23 +32,6 @@ namespace snooker_scorer.Actors
             public CreateGameResponse(IActorRef game)
             {
                 Game = game;
-            }
-        }
-    }
-
-    public partial class GameManagerActor
-    {
-        public class GameCountRequest
-        {
-        }
-
-        public class GameCountResponse
-        {
-            public readonly int NumberOfGames;
-
-            public GameCountResponse(int numberOfGames)
-            {
-                NumberOfGames = numberOfGames;
             }
         }
     }

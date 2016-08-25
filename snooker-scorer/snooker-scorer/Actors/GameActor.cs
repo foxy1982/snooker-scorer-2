@@ -12,10 +12,67 @@ namespace snooker_scorer.Actors
         private readonly IActorRef player1;
         private readonly IActorRef player2;
 
-        public GameActor()
+        public GameActor(string player1Name, string player2Name)
         {
-            player1 = Context.ActorOf<PlayerActor>();
-            player2 = Context.ActorOf<PlayerActor>();
+            player1 = Context.ActorOf(PlayerActor.Props(player1Name));
+            player2 = Context.ActorOf(PlayerActor.Props(player2Name));
+
+            Receive<StatusRequest>(msg => HandleStatusRequest(msg));
+        }
+
+        private void HandleStatusRequest(StatusRequest msg)
+        {
+            var task = Task.Run(async () =>
+            {
+                var player1Task = player1.Ask(new PlayerActor.StatusRequest());
+                var player2Task = player2.Ask(new PlayerActor.StatusRequest());
+
+                await Task.WhenAll(player1Task, player2Task);
+
+                var player1Info = player1Task.Result as PlayerActor.Status;
+                var player2Info = player2Task.Result as PlayerActor.Status;
+
+                return new Status(
+                    new Player(player1Info.Name),
+                    new Player(player2Info.Name));
+            });
+
+            task.PipeTo(Sender, Self);
+        }
+
+        public class Status
+        {
+            public readonly Player Player1;
+            public readonly Player Player2;
+
+            public Status(Player player1, Player player2)
+            {
+                Player1 = player1;
+                Player2 = player2;
+            }
+        }
+
+        public class Player
+        {
+            public readonly string Name;
+            public readonly int Score;
+
+            public Player(string name)
+            {
+                Name = name;
+            }
+        }
+
+        public class StatusRequest
+        {
+            public StatusRequest()
+            {
+            }
+        }
+
+        public static Props Props(string player1, string player2)
+        {
+            return Akka.Actor.Props.Create(() => new GameActor(player1, player2));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Akka.TestKit.NUnit3;
+﻿using Akka.Actor;
+using Akka.TestKit.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using snooker_scorer.Actors;
@@ -20,33 +21,22 @@ namespace snooker_scorer_test.Actors
         }
 
         [Test]
-        public void ShouldStartWithNoGamesInSystem()
-        {
-            var target = ActorOfAsTestActorRef<GameManagerActor>();
-            target.Tell(new GameManagerActor.GameCountRequest());
-            ExpectMsg<GameManagerActor.GameCountResponse>().ShouldBeEquivalentTo(
-                new GameManagerActor.GameCountResponse(0));
-        }
-
-        [Test]
-        public void ShouldHaveOneGameInSystemAfterGameCreated()
-        {
-            IgnoreMessages(x => true);
-            var target = ActorOfAsTestActorRef<GameManagerActor>();
-            target.Tell(new GameManagerActor.CreateGameRequest());
-            IgnoreNoMessages();
-            target.Tell(new GameManagerActor.GameCountRequest());
-            ExpectMsg<GameManagerActor.GameCountResponse>().ShouldBeEquivalentTo(
-                new GameManagerActor.GameCountResponse(1));
-        }
-
-        [Test]
         public void ShouldCreateNewGame()
         {
+            var player1 = "Alan";
+            var player2 = "John";
             var target = ActorOfAsTestActorRef<GameManagerActor>();
-            target.Tell(new GameManagerActor.CreateGameRequest());
-            var response = ExpectMsg<GameManagerActor.CreateGameResponse>();
-            response.Game.Should().NotBeNull();
+            target.Tell(new GameManagerActor.CreateGameRequest(player1, player2));
+            var game = ExpectMsg<GameManagerActor.CreateGameResponse>().Game;
+
+            game.Should().NotBeNull();
+            game.Tell(new GameActor.StatusRequest());
+
+            var status = ExpectMsg<GameActor.Status>();
+            status.Player1.Name.Should().Be(player1);
+            status.Player1.Score.Should().Be(0);
+            status.Player2.Name.Should().Be(player2);
+            status.Player2.Score.Should().Be(0);
         }
     }
 }
