@@ -70,9 +70,9 @@
     <Compile Include="Actors\FoulCounterActor.cs" />
     <Compile Include="Actors\FoulHandlerActor.cs" />
     <Compile Include="Actors\GameActor.cs" />
-    <Compile Include="Actors\GameCreatorActor.cs" />
+    <Compile Include="Actors\GameManagerActor.cs" />
     <Compile Include="Actors\LoggingActor.cs" />
-    <Compile Include="Actors\PlayerCreatorActor.cs" />
+    <Compile Include="Actors\PlayerActor.cs" />
     <Compile Include="Actors\PotHandlerActor.cs" />
     <Compile Include="Actors\ScoringActor.cs" />
     <Compile Include="Actors\ShotRecorderActor.cs" />
