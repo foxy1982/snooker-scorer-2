@@ -8,11 +8,11 @@ namespace snooker_scorer.Actors
 {
     public partial class BreakCounterActor
     {
-        public class CurrentBreak
+        public class CurrentBreakResponse
         {
             public readonly int Value;
 
-            public CurrentBreak(int value)
+            public CurrentBreakResponse(int value)
             {
                 Value = value;
             }

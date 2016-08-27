@@ -64,14 +64,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorSystemRefs.cs" />
-    <Compile Include="Actors\FoulCounterActor.Messages.cs" />
+    <Compile Include="Actors\BreakCounterActor.Messages.cs">
+      <DependentUpon>BreakCounterActor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Actors\BreakCounterActor.cs" />
-    <Compile Include="Actors\BreakCounterActor.Messages.cs" />
     <Compile Include="Actors\FoulCounterActor.cs" />
+    <Compile Include="Actors\FoulCounterActor.Messages.cs">
+      <DependentUpon>FoulCounterActor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Actors\FoulHandlerActor.cs" />
     <Compile Include="Actors\GameActor.cs" />
-    <Compile Include="Actors\GameActor.Messages.cs" />
+    <Compile Include="Actors\GameActor.Messages.cs">
+      <DependentUpon>GameActor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Actors\GameManagerActor.cs" />
+    <Compile Include="Actors\GameManagerActor.Messages.cs">
+      <DependentUpon>GameManagerActor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Actors\LoggingActor.cs" />
     <Compile Include="Actors\PlayerActor.cs" />
     <Compile Include="Actors\PotHandlerActor.cs" />

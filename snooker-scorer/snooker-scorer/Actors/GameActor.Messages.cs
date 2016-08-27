@@ -8,12 +8,12 @@ namespace snooker_scorer.Actors
 {
     public partial class GameActor
     {
-        public class Status
+        public class StatusResponse
         {
             public readonly Player Player1;
             public readonly Player Player2;
 
-            public Status(Player player1, Player player2)
+            public StatusResponse(Player player1, Player player2)
             {
                 Player1 = player1;
                 Player2 = player2;

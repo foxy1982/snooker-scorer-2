@@ -2,12 +2,12 @@
 {
     public partial class FoulCounterActor
     {
-        public class FoulCount
+        public class FoulCountResponse
         {
             public readonly int NumberOfFouls;
             public readonly int TotalPoints;
 
-            public FoulCount(int numberOfFouls, int totalPoints)
+            public FoulCountResponse(int numberOfFouls, int totalPoints)
             {
                 NumberOfFouls = numberOfFouls;
                 TotalPoints = totalPoints;

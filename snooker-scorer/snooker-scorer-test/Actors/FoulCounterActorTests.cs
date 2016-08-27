@@ -19,8 +19,8 @@ namespace snooker_scorer_test.Actors
         public void ShouldReturnZeroForFoulCountAtStart()
         {
             var foulCounter = ActorOfAsTestActorRef<FoulCounterActor>();
-            var foulCount = foulCounter.Ask(new FoulCounterActor.FoulCountRequest()).Result as FoulCounterActor.FoulCount;
-            foulCount.ShouldBeEquivalentTo(new FoulCounterActor.FoulCount(0, 0));
+            var foulCount = foulCounter.Ask(new FoulCounterActor.FoulCountRequest()).Result as FoulCounterActor.FoulCountResponse;
+            foulCount.ShouldBeEquivalentTo(new FoulCounterActor.FoulCountResponse(0, 0));
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace snooker_scorer_test.Actors
             foulCounter.Tell(new FoulCounterActor.Foul(4));
             IgnoreNoMessages();
             var foulCount = foulCounter.Ask(new FoulCounterActor.FoulCountRequest()).Result;
-            foulCount.ShouldBeEquivalentTo(new FoulCounterActor.FoulCount(1, 4));
+            foulCount.ShouldBeEquivalentTo(new FoulCounterActor.FoulCountResponse(1, 4));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace snooker_scorer_test.Actors
             foulCounter.Tell(new FoulCounterActor.Foul(5));
             IgnoreNoMessages();
             var foulCount = foulCounter.Ask(new FoulCounterActor.FoulCountRequest()).Result;
-            foulCount.ShouldBeEquivalentTo(new FoulCounterActor.FoulCount(2, 9));
+            foulCount.ShouldBeEquivalentTo(new FoulCounterActor.FoulCountResponse(2, 9));
         }
     }
 }

@@ -30,7 +30,7 @@ namespace snooker_scorer.Actors
                 var player1Info = player1Task.Result as PlayerActor.Status;
                 var player2Info = player2Task.Result as PlayerActor.Status;
 
-                return new Status(
+                return new StatusResponse(
                     new Player(player1Info.Name),
                     new Player(player2Info.Name));
             });

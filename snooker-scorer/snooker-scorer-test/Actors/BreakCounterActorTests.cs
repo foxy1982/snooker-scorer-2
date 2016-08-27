@@ -22,7 +22,7 @@ namespace snooker_scorer_test.Actors
         {
             var breakCounter = ActorOfAsTestActorRef<BreakCounterActor>();
             breakCounter.Tell(new BreakCounterActor.CurrentBreakRequest());
-            ExpectMsg<BreakCounterActor.CurrentBreak>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(0));
+            ExpectMsg<BreakCounterActor.CurrentBreakResponse>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreakResponse(0));
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace snooker_scorer_test.Actors
             var breakCounter = ActorOfAsTestActorRef<BreakCounterActor>();
             breakCounter.Tell(new ScoringShot(5));
             var currentBreak = breakCounter.Ask(new BreakCounterActor.CurrentBreakRequest()).Result;
-            currentBreak.ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(5));
+            currentBreak.ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreakResponse(5));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace snooker_scorer_test.Actors
             IgnoreNoMessages();
             breakCounter.Tell(new ScoringShot(5));
             var currentBreak = breakCounter.Ask(new BreakCounterActor.CurrentBreakRequest()).Result;
-            currentBreak.ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(6));
+            currentBreak.ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreakResponse(6));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace snooker_scorer_test.Actors
             breakCounter.Tell(new BreakCounterActor.EndOfBreak());
             ExpectNoMsg();
             breakCounter.Tell(new BreakCounterActor.CurrentBreakRequest());
-            ExpectMsg<BreakCounterActor.CurrentBreak>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(0));
+            ExpectMsg<BreakCounterActor.CurrentBreakResponse>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreakResponse(0));
         }
     }
 }

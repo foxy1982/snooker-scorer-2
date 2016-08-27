@@ -32,7 +32,7 @@ namespace snooker_scorer_test.Actors
             game.Should().NotBeNull();
             game.Tell(new GameActor.StatusRequest());
 
-            var status = ExpectMsg<GameActor.Status>();
+            var status = ExpectMsg<GameActor.StatusResponse>();
             status.Player1.Name.Should().Be(player1);
             status.Player1.Score.Should().Be(0);
             status.Player2.Name.Should().Be(player2);

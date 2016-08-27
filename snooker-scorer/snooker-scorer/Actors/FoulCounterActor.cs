@@ -23,7 +23,7 @@ namespace snooker_scorer.Actors
 
         private void HandleFoulCountRequest(FoulCountRequest msg)
         {
-            Sender.Tell(new FoulCount(_foulCount, _foulValueCount));
+            Sender.Tell(new FoulCountResponse(_foulCount, _foulValueCount));
         }
     }
 }

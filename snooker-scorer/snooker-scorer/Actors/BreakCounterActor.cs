@@ -10,8 +10,8 @@ namespace snooker_scorer.Actors
         public BreakCounterActor()
         {
             Receive<ScoringShot>(msg => HandleScoringShot(msg));
-            Receive<CurrentBreakRequest>(msg => HandleCurrentBreakRequest(msg));
             Receive<EndOfBreak>(msg => HandleEndOfBreak(msg));
+            Receive<CurrentBreakRequest>(msg => HandleCurrentBreakRequest(msg));
         }
 
         private void HandleEndOfBreak(EndOfBreak msg)
@@ -21,7 +21,7 @@ namespace snooker_scorer.Actors
 
         private void HandleCurrentBreakRequest(CurrentBreakRequest msg)
         {
-            Sender.Tell(new CurrentBreak(_score));
+            Sender.Tell(new CurrentBreakResponse(_score));
         }
 
         private void HandleScoringShot(ScoringShot msg)
