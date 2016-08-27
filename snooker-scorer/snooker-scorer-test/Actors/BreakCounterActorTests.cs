@@ -4,6 +4,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using snooker_scorer.Actors;
 using snooker_scorer.Messages;
+using System.Threading.Tasks;
 
 namespace snooker_scorer_test.Actors
 {
@@ -29,9 +30,8 @@ namespace snooker_scorer_test.Actors
         {
             var breakCounter = ActorOfAsTestActorRef<BreakCounterActor>();
             breakCounter.Tell(new ScoringShot(5));
-            ExpectMsg<BreakCounterActor.CurrentBreak>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(5));
-            breakCounter.Tell(new BreakCounterActor.CurrentBreakRequest());
-            ExpectMsg<BreakCounterActor.CurrentBreak>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(5));
+            var currentBreak = breakCounter.Ask(new BreakCounterActor.CurrentBreakRequest()).Result;
+            currentBreak.ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(5));
         }
 
         [Test]
@@ -42,9 +42,8 @@ namespace snooker_scorer_test.Actors
             breakCounter.Tell(new ScoringShot(1));
             IgnoreNoMessages();
             breakCounter.Tell(new ScoringShot(5));
-            ExpectMsg<BreakCounterActor.CurrentBreak>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(6));
-            breakCounter.Tell(new BreakCounterActor.CurrentBreakRequest());
-            ExpectMsg<BreakCounterActor.CurrentBreak>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(6));
+            var currentBreak = breakCounter.Ask(new BreakCounterActor.CurrentBreakRequest()).Result;
+            currentBreak.ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreak(6));
         }
 
         [Test]

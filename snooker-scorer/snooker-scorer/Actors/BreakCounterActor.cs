@@ -27,7 +27,6 @@ namespace snooker_scorer.Actors
         private void HandleScoringShot(ScoringShot msg)
         {
             _score += msg.Value;
-            Sender.Tell(new CurrentBreak(_score));
         }
     }
 }

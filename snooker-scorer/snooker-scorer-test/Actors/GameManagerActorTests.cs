@@ -26,8 +26,8 @@ namespace snooker_scorer_test.Actors
             var player1 = "Alan";
             var player2 = "John";
             var target = ActorOfAsTestActorRef<GameManagerActor>();
-            target.Tell(new GameManagerActor.CreateGameRequest(player1, player2));
-            var game = ExpectMsg<GameManagerActor.CreateGameResponse>().Game;
+            var gameResponse = target.Ask(new GameManagerActor.CreateGameRequest(player1, player2)).Result;
+            var game = (gameResponse as GameManagerActor.CreateGameResponse).Game;
 
             game.Should().NotBeNull();
             game.Tell(new GameActor.StatusRequest());
