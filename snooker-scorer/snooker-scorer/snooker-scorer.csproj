@@ -72,7 +72,6 @@
     <Compile Include="Actors\FoulCounterActor.Messages.cs">
       <DependentUpon>FoulCounterActor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Actors\FoulHandlerActor.cs" />
     <Compile Include="Actors\GameActor.cs" />
     <Compile Include="Actors\GameActor.Messages.cs">
       <DependentUpon>GameActor.cs</DependentUpon>
@@ -83,9 +82,6 @@
     </Compile>
     <Compile Include="Actors\LoggingActor.cs" />
     <Compile Include="Actors\PlayerActor.cs" />
-    <Compile Include="Actors\PotHandlerActor.cs" />
-    <Compile Include="Actors\ScoringActor.cs" />
-    <Compile Include="Actors\ShotRecorderActor.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Messages\ScoringShot.cs" />
     <Compile Include="Program.cs" />
