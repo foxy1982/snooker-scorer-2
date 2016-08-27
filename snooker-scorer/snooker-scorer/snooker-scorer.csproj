@@ -80,8 +80,10 @@
     <Compile Include="Actors\GameManagerActor.Messages.cs">
       <DependentUpon>GameManagerActor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Actors\LoggingActor.cs" />
     <Compile Include="Actors\PlayerActor.cs" />
+    <Compile Include="Actors\PlayerActor.Messages.cs">
+      <DependentUpon>PlayerActor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Messages\ScoringShot.cs" />
     <Compile Include="Program.cs" />

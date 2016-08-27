@@ -1,6 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Configuration;
 using Nancy;
+using Nancy.ModelBinding;
 using snooker_scorer.Actors;
 using System;
 using System.Collections.Generic;
@@ -12,16 +13,12 @@ namespace snooker_scorer.Web.Modules
 {
     public class DefaultModule : NancyModule
     {
-        private IActorRef logger;
-
         public DefaultModule()
         {
-            logger = ActorSystemRefs.Actors.Logger;
-
             Get["/status"] = _ =>
             {
-                logger.Tell("/status");
-                return Response.AsJson(new {
+                return Response.AsJson(new
+                {
                     status = "ok"
                 });
             };
@@ -34,6 +31,24 @@ namespace snooker_scorer.Web.Modules
             Post["/game/{gameId}/miss"]=HandleMiss();
             Post["/game/{gameId}/foul"]=HandleFoul();
             */
+
+            Post["/game"] = _ =>
+            {
+                var request = this.Bind<PostGameRequest>();
+
+                var response = ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.CreateGameRequest(request.Player1, request.Player2)).Result as GameManagerActor.CreateGameResponse;
+
+                return Response.AsJson(new
+                {
+                    game = response.Id
+                });
+            };
+        }
+
+        public class PostGameRequest
+        {
+            public string Player1 { get; set; }
+            public string Player2 { get; set; }
         }
     }
 }

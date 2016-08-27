@@ -10,11 +10,13 @@ namespace snooker_scorer.Actors
     {
         public class StatusResponse
         {
+            public readonly Guid Id;
             public readonly Player Player1;
             public readonly Player Player2;
 
-            public StatusResponse(Player player1, Player player2)
+            public StatusResponse(Guid id, Player player1, Player player2)
             {
+                Id = id;
                 Player1 = player1;
                 Player2 = player2;
             }

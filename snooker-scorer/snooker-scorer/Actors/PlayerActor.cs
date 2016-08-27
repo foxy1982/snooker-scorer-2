@@ -7,25 +7,8 @@ using System.Threading.Tasks;
 
 namespace snooker_scorer.Actors
 {
-    public class PlayerActor : ReceiveActor
+    public partial class PlayerActor : ReceiveActor
     {
-        public class Status
-        {
-            public readonly string Name;
-
-            public Status(string name)
-            {
-                Name = name;
-            }
-        }
-
-        public class StatusRequest
-        {
-            public StatusRequest()
-            {
-            }
-        }
-
         private string _name;
 
         public PlayerActor(string name)

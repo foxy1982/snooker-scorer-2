@@ -1,17 +1,24 @@
 ﻿using Akka.Actor;
+using Akka.Event;
+using System;
 using System.Threading.Tasks;
 
 namespace snooker_scorer.Actors
 {
     public partial class GameActor : ReceiveActor
     {
-        private readonly IActorRef player1;
-        private readonly IActorRef player2;
+        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
+
+        private readonly Guid _id;
+        private readonly IActorRef _player1;
+        private readonly IActorRef _player2;
 
         public GameActor(string player1Name, string player2Name)
         {
-            player1 = Context.ActorOf(PlayerActor.Props(player1Name));
-            player2 = Context.ActorOf(PlayerActor.Props(player2Name));
+            _log.Debug("GameActor ctor");
+            _id = Guid.NewGuid();
+            _player1 = Context.ActorOf(PlayerActor.Props(player1Name));
+            _player2 = Context.ActorOf(PlayerActor.Props(player2Name));
 
             Receive<StatusRequest>(msg => HandleStatusRequest(msg));
         }
@@ -22,8 +29,8 @@ namespace snooker_scorer.Actors
 
             var task = Task.Run(async () =>
             {
-                var player1Task = player1.Ask(new PlayerActor.StatusRequest());
-                var player2Task = player2.Ask(new PlayerActor.StatusRequest());
+                var player1Task = _player1.Ask(new PlayerActor.StatusRequest());
+                var player2Task = _player2.Ask(new PlayerActor.StatusRequest());
 
                 await Task.WhenAll(player1Task, player2Task);
 
@@ -31,6 +38,7 @@ namespace snooker_scorer.Actors
                 var player2Info = player2Task.Result as PlayerActor.Status;
 
                 return new StatusResponse(
+                    _id,
                     new Player(player1Info.Name),
                     new Player(player2Info.Name));
             });

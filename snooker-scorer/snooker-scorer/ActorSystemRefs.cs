@@ -13,7 +13,7 @@ namespace snooker_scorer
 
         public static class Actors
         {
-            public static IActorRef Logger;
+            public static IActorRef GameManager;
         }
     }
 }

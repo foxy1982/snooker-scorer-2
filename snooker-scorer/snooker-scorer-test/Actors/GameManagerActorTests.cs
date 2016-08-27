@@ -27,16 +27,9 @@ namespace snooker_scorer_test.Actors
             var player2 = "John";
             var target = ActorOfAsTestActorRef<GameManagerActor>();
             var gameResponse = target.Ask(new GameManagerActor.CreateGameRequest(player1, player2)).Result;
-            var game = (gameResponse as GameManagerActor.CreateGameResponse).Game;
+            var id = (gameResponse as GameManagerActor.CreateGameResponse).Id;
 
-            game.Should().NotBeNull();
-            game.Tell(new GameActor.StatusRequest());
-
-            var status = ExpectMsg<GameActor.StatusResponse>();
-            status.Player1.Name.Should().Be(player1);
-            status.Player1.Score.Should().Be(0);
-            status.Player2.Name.Should().Be(player2);
-            status.Player2.Score.Should().Be(0);
+            id.Should().NotBeEmpty();
         }
     }
 }

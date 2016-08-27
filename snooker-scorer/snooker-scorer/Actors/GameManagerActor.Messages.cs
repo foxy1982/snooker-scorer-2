@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using System;
 
 namespace snooker_scorer.Actors
 {
@@ -18,11 +19,11 @@ namespace snooker_scorer.Actors
 
         public class CreateGameResponse
         {
-            public readonly IActorRef Game;
+            public readonly Guid Id;
 
-            public CreateGameResponse(IActorRef game)
+            public CreateGameResponse(Guid id)
             {
-                Game = game;
+                Id = id;
             }
         }
     }
