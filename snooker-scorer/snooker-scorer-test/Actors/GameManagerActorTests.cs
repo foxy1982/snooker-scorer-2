@@ -3,11 +3,6 @@ using Akka.TestKit.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using snooker_scorer.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace snooker_scorer_test.Actors
 {

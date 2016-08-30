@@ -26,5 +26,15 @@ namespace snooker_scorer.Actors
                 Id = id;
             }
         }
+
+        public class EndGameCommand
+        {
+            public readonly Guid Id;
+
+            public EndGameCommand(Guid id)
+            {
+                Id = id;
+            }
+        }
     }
 }

@@ -13,10 +13,10 @@ namespace snooker_scorer.Actors
         private readonly IActorRef _player1;
         private readonly IActorRef _player2;
 
-        public GameActor(string player1Name, string player2Name)
+        public GameActor(Guid id, string player1Name, string player2Name)
         {
             _log.Debug("GameActor ctor");
-            _id = Guid.NewGuid();
+            _id = id;
             _player1 = Context.ActorOf(PlayerActor.Props(player1Name));
             _player2 = Context.ActorOf(PlayerActor.Props(player2Name));
 
@@ -46,9 +46,9 @@ namespace snooker_scorer.Actors
             task.PipeTo(sender, Self);
         }
 
-        public static Props Props(string player1, string player2)
+        public static Props Props(Guid id, string player1, string player2)
         {
-            return Akka.Actor.Props.Create(() => new GameActor(player1, player2));
+            return Akka.Actor.Props.Create(() => new GameActor(id, player1, player2));
         }
     }
 }
