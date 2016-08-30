@@ -27,14 +27,25 @@ namespace snooker_scorer.Actors
             public readonly string Name;
             public readonly int Score;
 
-            public Player(string name)
+            public Player(string name, int score)
             {
                 Name = name;
+                Score = score;
             }
         }
 
         public class StatusRequest
         {
+        }
+
+        public class ShotTakenCommand
+        {
+            public readonly int Score;
+
+            public ShotTakenCommand(int score)
+            {
+                Score = score;
+            }
         }
     }
 }

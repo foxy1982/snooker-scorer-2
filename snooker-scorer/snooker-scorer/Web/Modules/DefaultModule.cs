@@ -24,7 +24,6 @@ namespace snooker_scorer.Web.Modules
             };
             /*
             Get["/game/{gameId}"] = id => GetGame(id);
-            Post["/game"] = CreateGame();
             Post["/game/{gameId}/player"] = CreatePlayer(gameId);
 
             Post["/game/{gameId}/pot"]=HandlePot();
@@ -38,10 +37,16 @@ namespace snooker_scorer.Web.Modules
 
                 var response = ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.CreateGameRequest(request.Player1, request.Player2)).Result as GameManagerActor.CreateGameResponse;
 
-                return Response.AsJson(new
-                {
-                    game = response.Id
-                });
+                return Negotiate.WithModel(new { id = response.Id }).WithStatusCode(HttpStatusCode.Created);
+            };
+
+            Delete["/game/{id:guid}"] = _ =>
+            {
+                var request = this.Bind<DeleteGameRequest>();
+
+                ActorSystemRefs.Actors.GameManager.Tell(new GameManagerActor.EndGameCommand(request.Id));
+
+                return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
             };
         }
 
@@ -49,6 +54,11 @@ namespace snooker_scorer.Web.Modules
         {
             public string Player1 { get; set; }
             public string Player2 { get; set; }
+        }
+
+        public class DeleteGameRequest
+        {
+            public Guid Id { get; set; }
         }
     }
 }

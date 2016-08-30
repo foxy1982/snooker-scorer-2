@@ -12,6 +12,7 @@ namespace snooker_scorer.Actors
         private readonly Guid _id;
         private readonly IActorRef _player1;
         private readonly IActorRef _player2;
+        private IActorRef _nextToPlay;
 
         public GameActor(Guid id, string player1Name, string player2Name)
         {
@@ -19,8 +20,10 @@ namespace snooker_scorer.Actors
             _id = id;
             _player1 = Context.ActorOf(PlayerActor.Props(player1Name));
             _player2 = Context.ActorOf(PlayerActor.Props(player2Name));
+            _nextToPlay = _player1;
 
             Receive<StatusRequest>(msg => HandleStatusRequest(msg));
+            Receive<ShotTakenCommand>(msg => HandleShotTakenCommand(msg));
         }
 
         private void HandleStatusRequest(StatusRequest msg)
@@ -39,11 +42,21 @@ namespace snooker_scorer.Actors
 
                 return new StatusResponse(
                     _id,
-                    new Player(player1Info.Name),
-                    new Player(player2Info.Name));
+                    new Player(player1Info.Name, player1Info.Score),
+                    new Player(player2Info.Name, player2Info.Score));
             });
 
             task.PipeTo(sender, Self);
+        }
+
+        private void HandleShotTakenCommand(ShotTakenCommand msg)
+        {
+            _nextToPlay.Tell(new PlayerActor.ShotTakenCommand(msg.Score));
+
+            if (msg.Score == 0)
+            {
+                _nextToPlay = _nextToPlay == _player1 ? _player2 : _player1;
+            }
         }
 
         public static Props Props(Guid id, string player1, string player2)

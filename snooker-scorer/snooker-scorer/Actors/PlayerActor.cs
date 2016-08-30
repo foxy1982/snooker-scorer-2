@@ -10,13 +10,18 @@ namespace snooker_scorer.Actors
     public partial class PlayerActor : ReceiveActor
     {
         private string _name;
+        private int _score;
 
         public PlayerActor(string name)
         {
             _name = name;
             Receive<StatusRequest>(msg =>
             {
-                Sender.Tell(new Status(_name));
+                Sender.Tell(new Status(_name, _score));
+            });
+            Receive<ShotTakenCommand>(msg =>
+            {
+                _score += msg.Score;
             });
         }
 
