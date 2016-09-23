@@ -22,11 +22,18 @@ namespace snooker_scorer.Actors
             _player2 = Context.ActorOf(PlayerActor.Props(player2Name));
             _nextToPlay = _player1;
 
-            Receive<StatusRequest>(msg => HandleStatusRequest(msg));
+            Receive<StatusRequest>(msg => HandleStatusRequest());
             Receive<ShotTakenCommand>(msg => HandleShotTakenCommand(msg));
+            Receive<FoulCommittedCommand>(msg => HandleFoulCommittedCommand(msg));
         }
 
-        private void HandleStatusRequest(StatusRequest msg)
+        private void HandleFoulCommittedCommand(FoulCommittedCommand msg)
+        {
+            _nextToPlay = _nextToPlay == _player1 ? _player2 : _player1;
+            _nextToPlay.Tell(new PlayerActor.AwardFoulPointsCommand(msg.Value));
+        }
+
+        private void HandleStatusRequest()
         {
             var sender = Sender;
 

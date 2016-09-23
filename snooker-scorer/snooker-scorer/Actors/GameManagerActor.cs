@@ -25,6 +25,11 @@ namespace snooker_scorer.Actors
                 Sender.Tell(new CreateGameResponse(id));
             });
 
+            Receive<GetGameRequest>(msg =>
+            {
+                Sender.Tell(new GetGameResponse(_games[msg.Id]));
+            });
+
             Receive<EndGameCommand>(msg =>
             {
                 _games[msg.Id].GracefulStop(TimeSpan.FromSeconds(5));

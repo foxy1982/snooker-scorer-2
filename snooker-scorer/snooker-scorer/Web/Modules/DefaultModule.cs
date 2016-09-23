@@ -1,16 +1,11 @@
-﻿using Akka.Actor;
-using Akka.Configuration;
-using Nancy;
-using Nancy.ModelBinding;
-using snooker_scorer.Actors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace snooker_scorer.Web.Modules
+﻿namespace snooker_scorer.Web.Modules
 {
+    using System;
+    using Actors;
+    using Akka.Actor;
+    using Nancy;
+    using Nancy.ModelBinding;
+
     public class DefaultModule : NancyModule
     {
         public DefaultModule()
@@ -35,9 +30,36 @@ namespace snooker_scorer.Web.Modules
             {
                 var request = this.Bind<PostGameRequest>();
 
-                var response = ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.CreateGameRequest(request.Player1, request.Player2)).Result as GameManagerActor.CreateGameResponse;
+                var response =
+                    ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.CreateGameRequest(request.Player1, request.Player2)).Result as GameManagerActor.CreateGameResponse;
 
-                return Negotiate.WithModel(new { id = response.Id }).WithStatusCode(HttpStatusCode.Created);
+                return Negotiate.WithModel(new {id = response.Id}).WithStatusCode(HttpStatusCode.Created);
+            };
+
+            Get["/game/{id:guid}/status"] = _ =>
+            {
+                var request = this.Bind<GetGameStatusRequest>();
+
+                var gameRequestResponse = ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.GetGameRequest(request.Id)).Result as GameManagerActor.GetGameResponse;
+
+                var gameActor = gameRequestResponse.GameActor;
+
+                var response = gameActor.Ask(new GameActor.StatusRequest()).Result as GameActor.StatusResponse;
+
+                return Negotiate.WithModel(new
+                {
+                    id = response.Id,
+                    player1 = new
+                    {
+                        name = response.Player1.Name,
+                        score = response.Player1.Score
+                    },
+                    player2 = new
+                    {
+                        name = response.Player2.Name,
+                        score = response.Player2.Score
+                    }
+                });
             };
 
             Delete["/game/{id:guid}"] = _ =>
@@ -57,6 +79,11 @@ namespace snooker_scorer.Web.Modules
         }
 
         public class DeleteGameRequest
+        {
+            public Guid Id { get; set; }
+        }
+
+        public class GetGameStatusRequest
         {
             public Guid Id { get; set; }
         }

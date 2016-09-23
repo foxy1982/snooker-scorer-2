@@ -27,6 +27,26 @@ namespace snooker_scorer.Actors
             }
         }
 
+        public class GetGameRequest
+        {
+            public readonly Guid Id;
+
+            public GetGameRequest(Guid id)
+            {
+                Id = id;
+            }
+        }
+
+        public class GetGameResponse
+        {
+            public readonly IActorRef GameActor;
+
+            public GetGameResponse(IActorRef gameActor)
+            {
+                GameActor = gameActor;
+            }
+        }
+
         public class EndGameCommand
         {
             public readonly Guid Id;

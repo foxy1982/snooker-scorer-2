@@ -47,5 +47,15 @@ namespace snooker_scorer.Actors
                 Score = score;
             }
         }
+
+        public class FoulCommittedCommand
+        {
+            public readonly int Value;
+
+            public FoulCommittedCommand(int value)
+            {
+                Value = value;
+            }
+        }
     }
 }

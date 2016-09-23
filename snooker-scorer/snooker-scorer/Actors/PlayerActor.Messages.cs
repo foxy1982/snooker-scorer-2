@@ -16,9 +16,6 @@
 
         public class StatusRequest
         {
-            public StatusRequest()
-            {
-            }
         }
 
         public class ShotTakenCommand
@@ -28,6 +25,16 @@
             public ShotTakenCommand(int score)
             {
                 Score = score;
+            }
+        }
+
+        public class AwardFoulPointsCommand
+        {
+            public readonly int Value;
+
+            public AwardFoulPointsCommand(int value)
+            {
+                Value = value;
             }
         }
     }

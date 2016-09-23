@@ -74,5 +74,16 @@ namespace snooker_scorer_test.Actors
             response.Player1.Score.Should().Be(0);
             response.Player2.Score.Should().Be(5);
         }
+
+        [Test]
+        public void ShouldAddFoulScoreOntoPlayer2()
+        {
+            var target = BuildTarget();
+            target.Tell(new GameActor.FoulCommittedCommand(5));
+            var response = target.Ask(new GameActor.StatusRequest()).Result as GameActor.StatusResponse;
+
+            response.Player1.Score.Should().Be(0);
+            response.Player2.Score.Should().Be(5);
+        }
     }
 }

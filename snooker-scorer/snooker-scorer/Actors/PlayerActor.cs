@@ -23,6 +23,10 @@ namespace snooker_scorer.Actors
             {
                 _score += msg.Score;
             });
+            Receive<AwardFoulPointsCommand>(msg =>
+            {
+                _score += msg.Value;
+            });
         }
 
         public static Props Props(string name)
