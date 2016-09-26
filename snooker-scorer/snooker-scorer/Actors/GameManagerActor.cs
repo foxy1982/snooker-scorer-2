@@ -27,12 +27,18 @@ namespace snooker_scorer.Actors
 
             Receive<GetGameRequest>(msg =>
             {
+                if (!_games.ContainsKey(msg.Id))
+                {
+                    Sender.Tell(new GetGameResponse(null));
+                }
+
                 Sender.Tell(new GetGameResponse(_games[msg.Id]));
             });
 
             Receive<EndGameCommand>(msg =>
             {
                 _games[msg.Id].GracefulStop(TimeSpan.FromSeconds(5));
+                _games[msg.Id] = null;
             });
         }
     }
