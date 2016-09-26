@@ -1,0 +1,63 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Snooker",
+		"_postman_id": "08429311-d95b-de26-29ec-3049292f7cb5",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST game",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "tests[\"Response has id\"] = responseBody.has(\"id\");\ntests[\"Status code is 201\"] = responseCode.code === 201;\n\nvar postResponse = JSON.parse(responseBody);\npostman.setEnvironmentVariable(\"gameId\", postResponse.id);"
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:1147/game",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"player1\": \"Ian\",\n\t\"player2\": \"Dennis\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET game",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "tests[\"Response time is less than 200ms\"] = responseTime < 200;\ntests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar gameStatus = JSON.parse(responseBody);\ntests[\"ID\"] = gameStatus.id === environment.gameId;\ntests[\"Player1 Name\"] = gameStatus.player1.name === \"Ian\";\ntests[\"Player1 Score\"] = gameStatus.player1.score === 0;\ntests[\"Player2 Name\"] = gameStatus.player2.name === \"Dennis\";\ntests[\"Player2 Score\"] = gameStatus.player2.score === 0;\n"
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:1147/game/{{gameId}}",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

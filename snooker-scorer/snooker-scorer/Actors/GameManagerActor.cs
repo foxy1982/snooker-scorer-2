@@ -30,6 +30,7 @@ namespace snooker_scorer.Actors
                 if (!_games.ContainsKey(msg.Id))
                 {
                     Sender.Tell(new GetGameResponse(null));
+                    return;
                 }
 
                 Sender.Tell(new GetGameResponse(_games[msg.Id]));

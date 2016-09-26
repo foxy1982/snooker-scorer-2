@@ -10,16 +10,11 @@
     {
         public DefaultModule()
         {
-            Get["/status"] = _ =>
+            Get["/status"] = _ => Response.AsJson(new
             {
-                return Response.AsJson(new
-                {
-                    status = "ok"
-                });
-            };
+                status = "ok"
+            });
             /*
-            Get["/game/{gameId}"] = id => GetGame(id);
-            Post["/game/{gameId}/player"] = CreatePlayer(gameId);
 
             Post["/game/{gameId}/pot"]=HandlePot();
             Post["/game/{gameId}/miss"]=HandleMiss();
@@ -36,7 +31,7 @@
                 return Negotiate.WithModel(new {id = response.Id}).WithStatusCode(HttpStatusCode.Created);
             };
 
-            Get["/game/{id:guid}/status"] = _ =>
+            Get["/game/{id:guid}"] = _ =>
             {
                 var request = this.Bind<GetGameStatusRequest>();
 
