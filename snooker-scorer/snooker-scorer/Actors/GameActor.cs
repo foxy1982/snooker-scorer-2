@@ -1,6 +1,8 @@
 ﻿using Akka.Actor;
 using Akka.Event;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace snooker_scorer.Actors
@@ -10,27 +12,31 @@ namespace snooker_scorer.Actors
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
 
         private readonly Guid _id;
-        private readonly IActorRef _player1;
-        private readonly IActorRef _player2;
-        private IActorRef _nextToPlay;
+
+        private IDictionary<Guid, IActorRef> _players = new Dictionary<Guid, IActorRef>();
 
         public GameActor(Guid id, string player1Name, string player2Name)
         {
             _log.Debug("GameActor ctor");
             _id = id;
-            _player1 = Context.ActorOf(PlayerActor.Props(player1Name));
-            _player2 = Context.ActorOf(PlayerActor.Props(player2Name));
-            _nextToPlay = _player1;
+            CreatePlayer(player1Name, 1);
+            CreatePlayer(player2Name, 2);
 
             Receive<StatusRequest>(msg => HandleStatusRequest());
             Receive<ShotTakenCommand>(msg => HandleShotTakenCommand(msg));
             Receive<FoulCommittedCommand>(msg => HandleFoulCommittedCommand(msg));
         }
 
-        private void HandleFoulCommittedCommand(FoulCommittedCommand msg)
+        private void CreatePlayer(string name, int playerNumber)
         {
-            _nextToPlay = _nextToPlay == _player1 ? _player2 : _player1;
-            _nextToPlay.Tell(new PlayerActor.AwardFoulPointsCommand(msg.Value));
+            var player = Context.ActorOf(PlayerActor.Props(name, playerNumber));
+            var playerStatus = player.Ask(new PlayerActor.StatusRequest()).Result as PlayerActor.Status;
+            _players.Add(playerStatus.Id, player);
+        }
+
+        private IActorRef GetOtherPlayer(Guid id)
+        {
+            return _players.Where(x => x.Key != id).First().Value;
         }
 
         private void HandleStatusRequest()
@@ -39,18 +45,15 @@ namespace snooker_scorer.Actors
 
             var task = Task.Run(async () =>
             {
-                var player1Task = _player1.Ask(new PlayerActor.StatusRequest());
-                var player2Task = _player2.Ask(new PlayerActor.StatusRequest());
+                var tasks = _players.Select(x => x.Value.Ask(new PlayerActor.StatusRequest()));
 
-                await Task.WhenAll(player1Task, player2Task);
+                await Task.WhenAll(tasks);
 
-                var player1Info = player1Task.Result as PlayerActor.Status;
-                var player2Info = player2Task.Result as PlayerActor.Status;
+                var playerInfos = tasks.Select(x => x.Result as PlayerActor.Status).OrderBy(x => x.PlayerNumber);
 
                 return new StatusResponse(
                     _id,
-                    new Player(player1Info.Name, player1Info.Score),
-                    new Player(player2Info.Name, player2Info.Score));
+                    playerInfos.Select(x => new Player(x.Id, x.Name, x.Score)));
             });
 
             task.PipeTo(sender, Self);
@@ -58,12 +61,12 @@ namespace snooker_scorer.Actors
 
         private void HandleShotTakenCommand(ShotTakenCommand msg)
         {
-            _nextToPlay.Tell(new PlayerActor.ShotTakenCommand(msg.Score));
+            _players[msg.PlayerId].Tell(new PlayerActor.ShotTakenCommand(msg.Score));
+        }
 
-            if (msg.Score == 0)
-            {
-                _nextToPlay = _nextToPlay == _player1 ? _player2 : _player1;
-            }
+        private void HandleFoulCommittedCommand(FoulCommittedCommand msg)
+        {
+            GetOtherPlayer(msg.Id).Tell(new PlayerActor.AwardFoulPointsCommand(msg.Value));
         }
 
         public static Props Props(Guid id, string player1, string player2)

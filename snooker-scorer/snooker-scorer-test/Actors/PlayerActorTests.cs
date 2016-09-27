@@ -3,6 +3,7 @@ using Akka.TestKit.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using snooker_scorer.Actors;
+using System;
 
 namespace snooker_scorer_test.Actors
 {
@@ -19,9 +20,23 @@ namespace snooker_scorer_test.Actors
         public void ShouldRespondWithNameAndNoScoreWhenCreated()
         {
             var name = "Lex";
-            var player = ActorOfAsTestActorRef<PlayerActor>(PlayerActor.Props(name));
+            var player = ActorOfAsTestActorRef<PlayerActor>(PlayerActor.Props(name, 1));
             var status = player.Ask(new PlayerActor.StatusRequest()).Result as PlayerActor.Status;
             status.Name.Should().Be(name);
+            status.Id.Should().NotBe(Guid.Empty);
+            status.Score.Should().Be(0);
+        }
+
+        [Test]
+        public void TwoPlayersShouldNotHaveSameId()
+        {
+            var name1 = "Lex";
+            var name2 = "Lex";
+            var player1 = ActorOfAsTestActorRef<PlayerActor>(PlayerActor.Props(name1, 1));
+            var player2 = ActorOfAsTestActorRef<PlayerActor>(PlayerActor.Props(name2, 2));
+            var status1 = player1.Ask(new PlayerActor.StatusRequest()).Result as PlayerActor.Status;
+            var status2 = player2.Ask(new PlayerActor.StatusRequest()).Result as PlayerActor.Status;
+            status1.Id.Should().NotBe(status2.Id);
         }
     }
 }

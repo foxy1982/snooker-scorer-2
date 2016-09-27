@@ -43,7 +43,7 @@
 					"listen": "test",
 					"script": {
 						"type": "text/javascript",
-						"exec": "tests[\"Response time is less than 200ms\"] = responseTime < 200;\ntests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar gameStatus = JSON.parse(responseBody);\ntests[\"ID\"] = gameStatus.id === environment.gameId;\n\ntests[\"Player1 Name\"] = gameStatus.player1.name === \"Ian\";\ntests[\"Player1 Score\"] = gameStatus.player1.score === 0;\ntests[\"Player2 Name\"] = gameStatus.player2.name === \"Dennis\";\ntests[\"Player2 Score\"] = gameStatus.player2.score === 0;\n"
+						"exec": "tests[\"Response time is less than 200ms\"] = responseTime < 200;\ntests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar gameStatus = JSON.parse(responseBody);\ntests[\"ID\"] = gameStatus.id === environment.gameId;\n\ntests[\"Player1 Name\"] = gameStatus.players[0].name === \"Ian\";\ntests[\"Player1 Score\"] = gameStatus.players[0].score === 0;\ntests[\"Player2 Name\"] = gameStatus.players[1].name === \"Dennis\";\ntests[\"Player2 Score\"] = gameStatus.players[1].score === 0;\n"
 					}
 				}
 			],

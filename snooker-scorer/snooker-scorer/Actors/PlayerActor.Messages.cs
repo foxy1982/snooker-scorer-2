@@ -1,15 +1,21 @@
-﻿namespace snooker_scorer.Actors
+﻿using System;
+
+namespace snooker_scorer.Actors
 {
     public partial class PlayerActor
     {
         public class Status
         {
+            public readonly Guid Id;
             public readonly string Name;
+            public readonly int PlayerNumber;
             public readonly int Score;
 
-            public Status(string name, int score)
+            public Status(Guid id, string name, int playerNumber, int score)
             {
+                Id = id;
                 Name = name;
+                PlayerNumber = playerNumber;
                 Score = score;
             }
         }

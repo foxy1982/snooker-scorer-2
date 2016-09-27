@@ -11,24 +11,24 @@ namespace snooker_scorer.Actors
         public class StatusResponse
         {
             public readonly Guid Id;
-            public readonly Player Player1;
-            public readonly Player Player2;
+            public IEnumerable<Player> Players;
 
-            public StatusResponse(Guid id, Player player1, Player player2)
+            public StatusResponse(Guid id, IEnumerable<Player> players)
             {
                 Id = id;
-                Player1 = player1;
-                Player2 = player2;
+                Players = players;
             }
         }
 
         public class Player
         {
+            public readonly Guid Id;
             public readonly string Name;
             public readonly int Score;
 
-            public Player(string name, int score)
+            public Player(Guid id, string name, int score)
             {
+                Id = id;
                 Name = name;
                 Score = score;
             }
@@ -40,20 +40,24 @@ namespace snooker_scorer.Actors
 
         public class ShotTakenCommand
         {
+            public readonly Guid PlayerId;
             public readonly int Score;
 
-            public ShotTakenCommand(int score)
+            public ShotTakenCommand(Guid playerId, int score)
             {
                 Score = score;
+                PlayerId = playerId;
             }
         }
 
         public class FoulCommittedCommand
         {
+            public readonly Guid Id;
             public readonly int Value;
 
-            public FoulCommittedCommand(int value)
+            public FoulCommittedCommand(Guid id, int value)
             {
+                Id = id;
                 Value = value;
             }
         }

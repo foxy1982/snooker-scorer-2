@@ -5,6 +5,7 @@
     using Nancy;
     using Nancy.ModelBinding;
     using System;
+    using System.Linq;
 
     public class DefaultModule : NancyModule
     {
@@ -42,16 +43,12 @@
                 return Negotiate.WithModel(new
                 {
                     id = response.Id,
-                    player1 = new
+                    players = response.Players.Select(x => new
                     {
-                        name = response.Player1.Name,
-                        score = response.Player1.Score
-                    },
-                    player2 = new
-                    {
-                        name = response.Player2.Name,
-                        score = response.Player2.Score
-                    }
+                        x.Id,
+                        x.Name,
+                        x.Score
+                    })
                 });
             };
 
@@ -63,7 +60,7 @@
 
                 var gameActor = gameRequestResponse.GameActor;
 
-                gameActor.Tell(new GameActor.ShotTakenCommand(request.Value));
+                //gameActor.Tell(new GameActor.ShotTakenCommand(request.Value));
 
                 return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
             };
