@@ -1,15 +1,15 @@
 ﻿namespace snooker_scorer.Actors
 {
-    using System;
     using Akka.Actor;
     using Akka.Event;
+    using System;
 
     public partial class PlayerActor : ReceiveActor
     {
-        private readonly IActorRef _foulCounter;
-        private readonly Guid _id;
         private readonly ILoggingAdapter _log = Context.GetLogger();
+        private readonly IActorRef _foulCounter;
 
+        private readonly Guid _id;
         private readonly string _name;
         private readonly int _playerNumber;
         private int _score;
@@ -51,8 +51,18 @@
         {
             _log.Debug("HandleStatusRequest");
 
-            var foulResponse = _foulCounter.Ask(new FoulCounterActor.FoulCountRequest()).Result as FoulCounterActor.FoulCountResponse;
-            Sender.Tell(new Status(_id, _name, _playerNumber, _score, new Status.FoulCount(foulResponse.NumberOfFouls, foulResponse.TotalPoints)));
+            var senderClosure = Sender;
+
+            _foulCounter.Ask<FoulCounterActor.FoulCountResponse>(new FoulCounterActor.FoulCountRequest())
+                .ContinueWith(tr =>
+                {
+                    return new Status(_id,
+                        _name,
+                        _playerNumber,
+                        _score,
+                        new Status.FoulCount(tr.Result.NumberOfFouls,
+                            tr.Result.TotalPoints));
+                }).PipeTo(senderClosure);
         }
 
         public static Props Props(string name, int playerNumber)

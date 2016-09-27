@@ -7,7 +7,7 @@
     using System;
     using System.Linq;
 
-    public class DefaultModule : NancyModule
+    public partial class DefaultModule : NancyModule
     {
         public DefaultModule()
         {
@@ -17,7 +17,6 @@
             });
             /*
             Post["/game/{gameId}/miss"]=HandleMiss();
-            Post["/game/{gameId}/foul"]=HandleFoul();
             */
 
             Post["/game"] = _ =>
@@ -65,6 +64,19 @@
                 return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
             };
 
+            Post["/game/{gameId:guid}/{playerId:guid}/foul"] = _ =>
+            {
+                var request = this.Bind<PostFoulCommittedRequest>();
+
+                var gameRequestResponse = ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.GetGameRequest(request.GameId)).Result as GameManagerActor.GetGameResponse;
+
+                var gameActor = gameRequestResponse.GameActor;
+
+                gameActor.Tell(new GameActor.FoulCommittedCommand(request.PlayerId, request.Value));
+
+                return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
+            };
+
             Delete["/game/{id:guid}"] = _ =>
             {
                 var request = this.Bind<DeleteGameRequest>();
@@ -73,31 +85,6 @@
 
                 return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
             };
-        }
-
-        public class PostGameRequest
-        {
-            public string Player1 { get; set; }
-            public string Player2 { get; set; }
-        }
-
-        public class PostShotTakenRequest
-        {
-            public Guid GameId { get; set; }
-
-            public Guid PlayerId { get; set; }
-
-            public int Value { get; set; }
-        }
-
-        public class DeleteGameRequest
-        {
-            public Guid Id { get; set; }
-        }
-
-        public class GetGameStatusRequest
-        {
-            public Guid Id { get; set; }
         }
     }
 }

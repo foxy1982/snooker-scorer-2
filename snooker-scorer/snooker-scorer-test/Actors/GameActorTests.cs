@@ -75,17 +75,25 @@ namespace snooker_scorer_test.Actors
             var response = _target.Ask(new GameActor.StatusRequest()).Result as GameActor.StatusResponse;
 
             response.Players.First().Score.Should().Be(5);
+            response.Players.First().Fouls.Count.Should().Be(0);
+            response.Players.First().Fouls.Value.Should().Be(0);
             response.Players.Last().Score.Should().Be(0);
+            response.Players.Last().Fouls.Count.Should().Be(1);
+            response.Players.Last().Fouls.Value.Should().Be(5);
         }
 
         [Test]
-        public void ShouldAddFoulScoreOntoPlaye2WhenPlayer1Fouls()
+        public void ShouldAddFoulScoreOntoPlayer2WhenPlayer1Fouls()
         {
             _target.Tell(new GameActor.FoulCommittedCommand(_player1Id, 5));
             var response = _target.Ask(new GameActor.StatusRequest()).Result as GameActor.StatusResponse;
 
             response.Players.First().Score.Should().Be(0);
+            response.Players.First().Fouls.Count.Should().Be(1);
+            response.Players.First().Fouls.Value.Should().Be(5);
             response.Players.Last().Score.Should().Be(5);
+            response.Players.Last().Fouls.Count.Should().Be(0);
+            response.Players.Last().Fouls.Value.Should().Be(0);
         }
     }
 }

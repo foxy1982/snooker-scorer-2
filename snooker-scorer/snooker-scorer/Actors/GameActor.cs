@@ -55,7 +55,9 @@ namespace snooker_scorer.Actors
 
                 return new StatusResponse(
                     _id,
-                    playerInfos.Select(x => new Player(x.Id, x.Name, x.Score)));
+                    playerInfos.Select(x =>
+                        new StatusResponse.Player(x.Id, x.Name, x.Score,
+                            new StatusResponse.Player.FoulCount(x.Fouls.Count, x.Fouls.Value))));
             });
 
             task.PipeTo(sender, Self);
@@ -70,6 +72,7 @@ namespace snooker_scorer.Actors
         private void HandleFoulCommittedCommand(FoulCommittedCommand msg)
         {
             _log.Debug("HandleFoulCommittedCommand");
+            _players[msg.Id].Tell(new PlayerActor.FoulCommittedCommand(msg.Value));
             GetOtherPlayer(msg.Id).Tell(new PlayerActor.AwardFoulPointsCommand(msg.Value));
         }
 

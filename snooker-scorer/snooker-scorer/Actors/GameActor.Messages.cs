@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace snooker_scorer.Actors
 {
@@ -18,19 +15,33 @@ namespace snooker_scorer.Actors
                 Id = id;
                 Players = players;
             }
-        }
 
-        public class Player
-        {
-            public readonly Guid Id;
-            public readonly string Name;
-            public readonly int Score;
-
-            public Player(Guid id, string name, int score)
+            public class Player
             {
-                Id = id;
-                Name = name;
-                Score = score;
+                public readonly Guid Id;
+                public readonly string Name;
+                public readonly int Score;
+                public readonly FoulCount Fouls;
+
+                public Player(Guid id, string name, int score, FoulCount fouls)
+                {
+                    Id = id;
+                    Name = name;
+                    Score = score;
+                    Fouls = fouls;
+                }
+
+                public class FoulCount
+                {
+                    public readonly int Count;
+                    public readonly int Value;
+
+                    public FoulCount(int count, int value)
+                    {
+                        Count = count;
+                        Value = value;
+                    }
+                }
             }
         }
 

@@ -89,6 +89,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Modules\DefaultModule.cs" />
+    <Compile Include="Web\Modules\DefaultModule.Messages.cs">
+      <DependentUpon>DefaultModule.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
