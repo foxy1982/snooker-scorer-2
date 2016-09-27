@@ -25,6 +25,36 @@ namespace snooker_scorer_test.Actors
             status.Name.Should().Be(name);
             status.Id.Should().NotBe(Guid.Empty);
             status.Score.Should().Be(0);
+            status.Fouls.Count.Should().Be(0);
+            status.Fouls.Value.Should().Be(0);
+        }
+
+        [Test]
+        public void ShouldAddFoulsOnWhenFoulCommitted()
+        {
+            var name = "Lex";
+            var player = ActorOfAsTestActorRef<PlayerActor>(PlayerActor.Props(name, 1));
+            player.Tell(new PlayerActor.FoulCommittedCommand(5));
+            var status = player.Ask(new PlayerActor.StatusRequest()).Result as PlayerActor.Status;
+            status.Name.Should().Be(name);
+            status.Id.Should().NotBe(Guid.Empty);
+            status.Score.Should().Be(0);
+            status.Fouls.Count.Should().Be(1);
+            status.Fouls.Value.Should().Be(5);
+        }
+
+        [Test]
+        public void ShouldNotAddFoulsOnWhenFoulPointsAwarded()
+        {
+            var name = "Lex";
+            var player = ActorOfAsTestActorRef<PlayerActor>(PlayerActor.Props(name, 1));
+            player.Tell(new PlayerActor.AwardFoulPointsCommand(5));
+            var status = player.Ask(new PlayerActor.StatusRequest()).Result as PlayerActor.Status;
+            status.Name.Should().Be(name);
+            status.Id.Should().NotBe(Guid.Empty);
+            status.Score.Should().Be(5);
+            status.Fouls.Count.Should().Be(0);
+            status.Fouls.Value.Should().Be(0);
         }
 
         [Test]

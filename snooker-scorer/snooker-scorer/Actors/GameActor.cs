@@ -9,11 +9,11 @@ namespace snooker_scorer.Actors
 {
     public partial class GameActor : ReceiveActor
     {
-        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
+        private readonly ILoggingAdapter _log = Context.GetLogger();
 
         private readonly Guid _id;
 
-        private IDictionary<Guid, IActorRef> _players = new Dictionary<Guid, IActorRef>();
+        private readonly IDictionary<Guid, IActorRef> _players = new Dictionary<Guid, IActorRef>();
 
         public GameActor(Guid id, string player1Name, string player2Name)
         {
@@ -29,6 +29,7 @@ namespace snooker_scorer.Actors
 
         private void CreatePlayer(string name, int playerNumber)
         {
+            _log.Debug("CreatePlayer");
             var player = Context.ActorOf(PlayerActor.Props(name, playerNumber));
             var playerStatus = player.Ask(new PlayerActor.StatusRequest()).Result as PlayerActor.Status;
             _players.Add(playerStatus.Id, player);
@@ -36,16 +37,17 @@ namespace snooker_scorer.Actors
 
         private IActorRef GetOtherPlayer(Guid id)
         {
-            return _players.Where(x => x.Key != id).First().Value;
+            return _players.First(x => x.Key != id).Value;
         }
 
         private void HandleStatusRequest()
         {
+            _log.Debug("HandleStatusRequest");
             var sender = Sender;
 
             var task = Task.Run(async () =>
             {
-                var tasks = _players.Select(x => x.Value.Ask(new PlayerActor.StatusRequest()));
+                var tasks = _players.Select(x => x.Value.Ask(new PlayerActor.StatusRequest())).ToList();
 
                 await Task.WhenAll(tasks);
 
@@ -61,11 +63,13 @@ namespace snooker_scorer.Actors
 
         private void HandleShotTakenCommand(ShotTakenCommand msg)
         {
+            _log.Debug("HandleShotTakenCommand");
             _players[msg.PlayerId].Tell(new PlayerActor.ShotTakenCommand(msg.Score));
         }
 
         private void HandleFoulCommittedCommand(FoulCommittedCommand msg)
         {
+            _log.Debug("HandleFoulCommittedCommand");
             GetOtherPlayer(msg.Id).Tell(new PlayerActor.AwardFoulPointsCommand(msg.Value));
         }
 

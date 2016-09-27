@@ -52,15 +52,15 @@
                 });
             };
 
-            Post["/game/{id:guid}/shot"] = _ =>
+            Post["/game/{gameId:guid}/{playerId:guid}/shot"] = _ =>
             {
                 var request = this.Bind<PostShotTakenRequest>();
 
-                var gameRequestResponse = ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.GetGameRequest(request.Id)).Result as GameManagerActor.GetGameResponse;
+                var gameRequestResponse = ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.GetGameRequest(request.GameId)).Result as GameManagerActor.GetGameResponse;
 
                 var gameActor = gameRequestResponse.GameActor;
 
-                //gameActor.Tell(new GameActor.ShotTakenCommand(request.Value));
+                gameActor.Tell(new GameActor.ShotTakenCommand(request.PlayerId, request.Value));
 
                 return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
             };
@@ -83,7 +83,9 @@
 
         public class PostShotTakenRequest
         {
-            public Guid Id { get; set; }
+            public Guid GameId { get; set; }
+
+            public Guid PlayerId { get; set; }
 
             public int Value { get; set; }
         }

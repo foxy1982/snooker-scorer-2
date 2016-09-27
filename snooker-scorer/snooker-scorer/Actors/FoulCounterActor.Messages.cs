@@ -16,9 +16,6 @@
 
         public class FoulCountRequest
         {
-            public FoulCountRequest()
-            {
-            }
         }
 
         public class Foul

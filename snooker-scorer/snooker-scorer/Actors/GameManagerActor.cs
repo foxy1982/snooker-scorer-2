@@ -9,7 +9,7 @@ namespace snooker_scorer.Actors
     {
         private readonly ILoggingAdapter _log = Context.GetLogger();
 
-        private Dictionary<Guid, IActorRef> _games;
+        private readonly Dictionary<Guid, IActorRef> _games;
 
         public GameManagerActor()
         {

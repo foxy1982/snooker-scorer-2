@@ -1,9 +1,7 @@
-﻿using Akka.Actor;
-using System;
-using System.Threading.Tasks;
-
-namespace snooker_scorer.Actors
+﻿namespace snooker_scorer.Actors
 {
+    using Akka.Actor;
+
     public partial class FoulCounterActor : ReceiveActor
     {
         private int _foulCount;
@@ -11,7 +9,7 @@ namespace snooker_scorer.Actors
 
         public FoulCounterActor()
         {
-            Receive<FoulCountRequest>(msg => HandleFoulCountRequest(msg));
+            Receive<FoulCountRequest>(msg => HandleFoulCountRequest());
             Receive<Foul>(msg => HandleFoul(msg));
         }
 
@@ -21,9 +19,14 @@ namespace snooker_scorer.Actors
             _foulValueCount += msg.Value;
         }
 
-        private void HandleFoulCountRequest(FoulCountRequest msg)
+        private void HandleFoulCountRequest()
         {
             Sender.Tell(new FoulCountResponse(_foulCount, _foulValueCount));
+        }
+
+        public static Props Props()
+        {
+            return Akka.Actor.Props.Create(() => new FoulCounterActor());
         }
     }
 }
