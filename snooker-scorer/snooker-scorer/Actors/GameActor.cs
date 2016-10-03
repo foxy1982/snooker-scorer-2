@@ -15,16 +15,24 @@ namespace snooker_scorer.Actors
 
         private readonly IDictionary<Guid, IActorRef> _players = new Dictionary<Guid, IActorRef>();
 
-        public GameActor(Guid id, string player1Name, string player2Name)
+        public GameActor(Guid id, Props player1Props, Props player2Props)
         {
             _log.Debug("GameActor ctor");
             _id = id;
-            CreatePlayer(player1Name, 1);
-            CreatePlayer(player2Name, 2);
+            CreatePlayer(player1Props);
+            CreatePlayer(player2Props);
 
             Receive<StatusRequest>(msg => HandleStatusRequest());
             Receive<ShotTakenCommand>(msg => HandleShotTakenCommand(msg));
             Receive<FoulCommittedCommand>(msg => HandleFoulCommittedCommand(msg));
+        }
+
+        private void CreatePlayer(Props playerProps)
+        {
+            _log.Debug("CreatePlayer");
+            var player = Context.ActorOf(playerProps);
+            var playerStatus = player.Ask(new PlayerActor.StatusRequest()).Result as PlayerActor.Status;
+            _players.Add(playerStatus.Id, player);
         }
 
         private void CreatePlayer(string name, int playerNumber)
@@ -76,9 +84,9 @@ namespace snooker_scorer.Actors
             GetOtherPlayer(msg.Id).Tell(new PlayerActor.AwardFoulPointsCommand(msg.Value));
         }
 
-        public static Props Props(Guid id, string player1, string player2)
+        public static Props Props(Guid id, Props player1Props, Props player2Props)
         {
-            return Akka.Actor.Props.Create(() => new GameActor(id, player1, player2));
+            return Akka.Actor.Props.Create(() => new GameActor(id, player1Props, player2Props));
         }
     }
 }

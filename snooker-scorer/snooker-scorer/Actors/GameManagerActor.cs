@@ -20,7 +20,11 @@ namespace snooker_scorer.Actors
             Receive<CreateGameRequest>(msg =>
             {
                 var id = Guid.NewGuid();
-                var game = Context.ActorOf(GameActor.Props(id, msg.Player1, msg.Player2), "Game_" + id.ToString());
+                var game = Context.ActorOf(
+                    GameActor.Props(id,
+                        PlayerActor.Props(msg.Player1, 1),
+                        PlayerActor.Props(msg.Player2, 2)),
+                    "Game_" + id.ToString());
                 _games.Add(id, game);
                 Sender.Tell(new CreateGameResponse(id));
             });

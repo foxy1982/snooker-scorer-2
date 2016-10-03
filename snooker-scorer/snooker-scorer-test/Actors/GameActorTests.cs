@@ -24,7 +24,9 @@ namespace snooker_scorer_test.Actors
             _id = Guid.Empty;
             _player1Name = "Alan";
             _player2Name = "John";
-            _target = ActorOfAsTestActorRef(() => new GameActor(_id, _player1Name, _player2Name));
+            _target = ActorOfAsTestActorRef(() => new GameActor(_id,
+                PlayerActor.Props(_player1Name, 1),
+                PlayerActor.Props(_player2Name, 2)));
 
             var status = _target.Ask(new GameActor.StatusRequest()).Result as GameActor.StatusResponse;
             _player1Id = status.Players.First().Id;
