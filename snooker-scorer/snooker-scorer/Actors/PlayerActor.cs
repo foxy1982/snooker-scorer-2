@@ -14,10 +14,10 @@
         private readonly int _playerNumber;
         private int _score;
 
-        public PlayerActor(string name, int playerNumber)
+        public PlayerActor(Guid id, string name, int playerNumber)
         {
             _log.Debug("PlayerActor ctor");
-            _id = Guid.NewGuid();
+            _id = id;
             _name = name;
             _playerNumber = playerNumber;
 
@@ -65,9 +65,9 @@
                 }).PipeTo(senderClosure);
         }
 
-        public static Props Props(string name, int playerNumber)
+        public static Props Props(Guid id, string name, int playerNumber)
         {
-            return Akka.Actor.Props.Create(() => new PlayerActor(name, playerNumber));
+            return Akka.Actor.Props.Create(() => new PlayerActor(id, name, playerNumber));
         }
     }
 }
