@@ -14,14 +14,14 @@
         private readonly int _playerNumber;
         private int _score;
 
-        public PlayerActor(Guid id, string name, int playerNumber)
+        public PlayerActor(Guid id, string name, int playerNumber, Props foulCounterProps)
         {
             _log.Debug("PlayerActor ctor");
             _id = id;
             _name = name;
             _playerNumber = playerNumber;
 
-            _foulCounter = Context.ActorOf(FoulCounterActor.Props());
+            _foulCounter = Context.ActorOf(foulCounterProps, $"FoulCounter:{Guid.NewGuid()}");
 
             Receive<StatusRequest>(msg => HandleStatusRequest());
             Receive<ShotTakenCommand>(msg => HandleShotTakenCommand(msg));
@@ -67,7 +67,7 @@
 
         public static Props Props(Guid id, string name, int playerNumber)
         {
-            return Akka.Actor.Props.Create(() => new PlayerActor(id, name, playerNumber));
+            return Akka.Actor.Props.Create(() => new PlayerActor(id, name, playerNumber, FoulCounterActor.Props()));
         }
     }
 }

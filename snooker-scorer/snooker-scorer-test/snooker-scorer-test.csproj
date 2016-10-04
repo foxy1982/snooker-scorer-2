@@ -75,7 +75,6 @@
     <Compile Include="Actors\BreakCounterActorTests.cs" />
     <Compile Include="Actors\ForwarderActor.cs" />
     <Compile Include="Actors\FoulCounterActorTests.cs" />
-    <Compile Include="Actors\GameActorTests_Initialize.cs" />
     <Compile Include="Actors\ScrapTests.cs" />
     <Compile Include="Actors\GameActorTests.cs" />
     <Compile Include="Actors\GameManagerActorTests.cs" />

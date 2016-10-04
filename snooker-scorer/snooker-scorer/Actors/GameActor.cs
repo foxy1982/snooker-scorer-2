@@ -30,7 +30,7 @@ namespace snooker_scorer.Actors
         private void CreatePlayer(Guid playerId, Props playerProps)
         {
             _log.Debug("CreatePlayer");
-            var player = Context.ActorOf(playerProps);
+            var player = Context.ActorOf(playerProps, $"Player:{playerId}");
             _players.Add(playerId, player);
         }
 

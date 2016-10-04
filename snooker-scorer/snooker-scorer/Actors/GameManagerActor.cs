@@ -28,7 +28,7 @@ namespace snooker_scorer.Actors
                             PlayerActor.Props(player1Id, msg.Player1, 1),
                             player2Id,
                             PlayerActor.Props(player2Id, msg.Player2, 2)),
-                        "Game_" + id.ToString());
+                        $"Game:{id}");
                 _games.Add(id, game);
                 Sender.Tell(new CreateGameResponse(id));
             });

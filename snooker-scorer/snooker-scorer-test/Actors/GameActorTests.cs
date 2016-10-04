@@ -19,8 +19,6 @@ namespace snooker_scorer_test.Actors
 
         private TestProbe _player1;
         private TestProbe _player2;
-        private Props _player1Props;
-        private Props _player2Props;
 
         private IActorRef _target;
 
@@ -30,14 +28,20 @@ namespace snooker_scorer_test.Actors
             _player1 = CreateTestProbe("player1");
             _player2 = CreateTestProbe("player2");
 
-            _player1Props = Props.Create(() => new ForwarderActor(_player1.Ref));
-            _player2Props = Props.Create(() => new ForwarderActor(_player2.Ref));
+            var player1Props = Props.Create(() => new ForwarderActor(_player1.Ref));
+            var player2Props = Props.Create(() => new ForwarderActor(_player2.Ref));
 
             _target = Sys.ActorOf(Props.Create(() => new GameActor(_id,
                 _player1Id,
-                _player1Props,
+                player1Props,
                 _player2Id,
-                _player2Props)));
+                player2Props)));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Shutdown();
         }
 
         [Test]
