@@ -4,4 +4,4 @@ before_build:
 
 test:
   assemblies:
-    - '**\*.tests.dll'
+    - '**\*-test.dll'
