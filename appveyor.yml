@@ -1,3 +1,7 @@
 before_build:
   - cd snooker-scorer
   - nuget restore
+
+test:
+  assemblies:
+    - '**\*.tests.dll'
