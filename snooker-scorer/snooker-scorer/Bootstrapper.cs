@@ -8,12 +8,7 @@ namespace snooker_scorer
     {
         public static void InitializeActorSystem()
         {
-            var config = ConfigurationFactory.ParseString(
-                @"akka {
-                    loglevel = DEBUG
-                    suppress-json-serializer-warning = true
-                }");
-            ActorSystemRefs.ActorSystem = ActorSystem.Create("snooker", config);
+            ActorSystemRefs.ActorSystem = ActorSystem.Create("snooker");
             ActorSystemRefs.Actors.GameManager = ActorSystemRefs.ActorSystem.ActorOf<GameManagerActor>("game-manager");
         }
     }
