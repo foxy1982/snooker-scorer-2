@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Snooker",
-		"_postman_id": "2ec4bdde-dca1-684d-573b-bbd9a0de3195",
+		"_postman_id": "719afdc8-3f6b-c10f-38b4-c63e5b06c929",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -19,7 +19,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:1147/game",
+				"url": "http://{{host}}:1147/game",
 				"method": "POST",
 				"header": [
 					{
@@ -48,7 +48,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:1147/game/{{gameId}}",
+				"url": "http://{{host}}:1147/game/{{gameId}}",
 				"method": "GET",
 				"header": [],
 				"body": {
@@ -71,7 +71,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:1147/game/{{gameId}}/{{player1Id}}/shot",
+				"url": "http://{{host}}:1147/game/{{gameId}}/{{player1Id}}/shot",
 				"method": "POST",
 				"header": [
 					{
@@ -100,7 +100,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:1147/game/{{gameId}}",
+				"url": "http://{{host}}:1147/game/{{gameId}}",
 				"method": "GET",
 				"header": [],
 				"body": {
@@ -123,7 +123,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:1147/game/{{gameId}}/{{player1Id}}/foul",
+				"url": "http://{{host}}:1147/game/{{gameId}}/{{player1Id}}/foul",
 				"method": "POST",
 				"header": [
 					{
@@ -152,7 +152,7 @@
 				}
 			],
 			"request": {
-				"url": "http://localhost:1147/game/{{gameId}}",
+				"url": "http://{{host}}:1147/game/{{gameId}}",
 				"method": "GET",
 				"header": [],
 				"body": {

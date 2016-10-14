@@ -1,0 +1,4 @@
+snooker-scorer:
+  build: .
+  ports:
+    - "1147:1147"
