@@ -1,8 +1,8 @@
-﻿using Akka.Actor;
-using snooker_scorer.Messages;
-
-namespace snooker_scorer.Actors
+﻿namespace snooker_scorer.Actors
 {
+    using Akka.Actor;
+    using Messages;
+
     public partial class BreakCounterActor : ReceiveActor
     {
         private int _score;

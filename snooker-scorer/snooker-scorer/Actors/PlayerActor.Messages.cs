@@ -1,16 +1,16 @@
-﻿using System;
-
-namespace snooker_scorer.Actors
+﻿namespace snooker_scorer.Actors
 {
+    using System;
+
     public partial class PlayerActor
     {
         public class Status
         {
+            public readonly FoulCount Fouls;
             public readonly Guid Id;
             public readonly string Name;
             public readonly int PlayerNumber;
             public readonly int Score;
-            public readonly FoulCount Fouls;
 
             public Status(Guid id, string name, int playerNumber, int score, FoulCount fouls)
             {
@@ -25,7 +25,7 @@ namespace snooker_scorer.Actors
             {
                 public readonly int Count;
                 public readonly int Value;
-                
+
                 public FoulCount(int count, int value)
                 {
                     Count = count;

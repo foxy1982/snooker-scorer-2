@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace snooker_scorer.Actors
+﻿namespace snooker_scorer.Actors
 {
+    using System;
+    using System.Collections.Generic;
+
     public partial class GameActor
     {
         public class StatusResponse
@@ -18,10 +18,10 @@ namespace snooker_scorer.Actors
 
             public class Player
             {
+                public readonly FoulCount Fouls;
                 public readonly Guid Id;
                 public readonly string Name;
                 public readonly int Score;
-                public readonly FoulCount Fouls;
 
                 public Player(Guid id, string name, int score, FoulCount fouls)
                 {

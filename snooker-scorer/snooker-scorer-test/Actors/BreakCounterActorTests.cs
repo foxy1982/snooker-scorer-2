@@ -1,13 +1,12 @@
-﻿using Akka.Actor;
-using Akka.TestKit.NUnit3;
-using FluentAssertions;
-using NUnit.Framework;
-using snooker_scorer.Actors;
-using snooker_scorer.Messages;
-using System.Threading.Tasks;
-
-namespace snooker_scorer_test.Actors
+﻿namespace snooker_scorer_test.Actors
 {
+    using Akka.Actor;
+    using Akka.TestKit.NUnit3;
+    using FluentAssertions;
+    using NUnit.Framework;
+    using snooker_scorer.Actors;
+    using snooker_scorer.Messages;
+
     [TestFixture]
     public class BreakCounterActorTests : TestKit
     {
@@ -18,9 +17,14 @@ namespace snooker_scorer_test.Actors
         }
 
         [Test]
-        public void ShouldReturnZeroForCurrentBreakAtStart()
+        public void ShouldResetCurrentBreakToZeroWhenRequested()
         {
+            IgnoreMessages(x => true);
             var breakCounter = ActorOfAsTestActorRef<BreakCounterActor>();
+            breakCounter.Tell(new ScoringShot(1));
+            IgnoreNoMessages();
+            breakCounter.Tell(new BreakCounterActor.EndOfBreak());
+            ExpectNoMsg();
             breakCounter.Tell(new BreakCounterActor.CurrentBreakRequest());
             ExpectMsg<BreakCounterActor.CurrentBreakResponse>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreakResponse(0));
         }
@@ -47,14 +51,9 @@ namespace snooker_scorer_test.Actors
         }
 
         [Test]
-        public void ShouldResetCurrentBreakToZeroWhenRequested()
+        public void ShouldReturnZeroForCurrentBreakAtStart()
         {
-            IgnoreMessages(x => true);
             var breakCounter = ActorOfAsTestActorRef<BreakCounterActor>();
-            breakCounter.Tell(new ScoringShot(1));
-            IgnoreNoMessages();
-            breakCounter.Tell(new BreakCounterActor.EndOfBreak());
-            ExpectNoMsg();
             breakCounter.Tell(new BreakCounterActor.CurrentBreakRequest());
             ExpectMsg<BreakCounterActor.CurrentBreakResponse>().ShouldBeEquivalentTo(new BreakCounterActor.CurrentBreakResponse(0));
         }

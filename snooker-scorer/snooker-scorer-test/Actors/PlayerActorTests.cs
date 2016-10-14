@@ -1,24 +1,15 @@
-﻿using Akka.Actor;
-using Akka.TestKit;
-using Akka.TestKit.NUnit3;
-using FluentAssertions;
-using NUnit.Framework;
-using snooker_scorer.Actors;
-using System;
-
-namespace snooker_scorer_test.Actors
+﻿namespace snooker_scorer_test.Actors
 {
+    using System;
+    using Akka.Actor;
+    using Akka.TestKit;
+    using Akka.TestKit.NUnit3;
+    using NUnit.Framework;
+    using snooker_scorer.Actors;
+
     [TestFixture]
     public class PlayerActorTests : TestKit
     {
-        private Guid _playerId = Guid.Parse("00000000-0000-0000-0000-000000000002");
-        private string _playerName = "Player 2";
-        private int _playerNumber = 2;
-
-        private TestProbe _foulCounter;
-
-        private IActorRef _target;
-
         [SetUp]
         public void SetUp()
         {
@@ -38,9 +29,19 @@ namespace snooker_scorer_test.Actors
             Shutdown();
         }
 
+        private readonly Guid _playerId = Guid.Parse("00000000-0000-0000-0000-000000000002");
+        private readonly string _playerName = "Player 2";
+        private readonly int _playerNumber = 2;
+
+        private TestProbe _foulCounter;
+
+        private IActorRef _target;
+
         [Test]
-        public void ShouldRequestStatusFromFoulCounter()
+        public void ShouldAddOnAwardedFoulPoints()
         {
+            _target.Tell(new PlayerActor.AwardFoulPointsCommand(7));
+
             _target.Tell(new PlayerActor.StatusRequest());
 
             _foulCounter.ExpectMsg<FoulCounterActor.FoulCountRequest>();
@@ -49,11 +50,7 @@ namespace snooker_scorer_test.Actors
             var response = ExpectMsg<PlayerActor.Status>();
 
             Assert.That(response, Is.Not.Null);
-            Assert.That(response.Id, Is.EqualTo(_playerId));
-            Assert.That(response.Name, Is.EqualTo(_playerName));
-            Assert.That(response.Score, Is.EqualTo(0));
-            Assert.That(response.Fouls.Count, Is.EqualTo(5));
-            Assert.That(response.Fouls.Value, Is.EqualTo(6));
+            Assert.That(response.Score, Is.EqualTo(7));
         }
 
         [Test]
@@ -73,10 +70,8 @@ namespace snooker_scorer_test.Actors
         }
 
         [Test]
-        public void ShouldAddOnAwardedFoulPoints()
+        public void ShouldRequestStatusFromFoulCounter()
         {
-            _target.Tell(new PlayerActor.AwardFoulPointsCommand(7));
-
             _target.Tell(new PlayerActor.StatusRequest());
 
             _foulCounter.ExpectMsg<FoulCounterActor.FoulCountRequest>();
@@ -85,7 +80,11 @@ namespace snooker_scorer_test.Actors
             var response = ExpectMsg<PlayerActor.Status>();
 
             Assert.That(response, Is.Not.Null);
-            Assert.That(response.Score, Is.EqualTo(7));
+            Assert.That(response.Id, Is.EqualTo(_playerId));
+            Assert.That(response.Name, Is.EqualTo(_playerName));
+            Assert.That(response.Score, Is.EqualTo(0));
+            Assert.That(response.Fouls.Count, Is.EqualTo(5));
+            Assert.That(response.Fouls.Value, Is.EqualTo(6));
         }
 
         [Test]

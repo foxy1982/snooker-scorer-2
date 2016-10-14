@@ -1,11 +1,11 @@
-﻿using Nancy.Hosting.Self;
-using System;
-
-namespace snooker_scorer
+﻿namespace snooker_scorer
 {
-    class Program
+    using System;
+    using Nancy.Hosting.Self;
+
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Bootstrapper.InitializeActorSystem();
 

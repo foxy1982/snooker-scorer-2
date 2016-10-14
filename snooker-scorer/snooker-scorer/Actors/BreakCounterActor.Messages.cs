@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace snooker_scorer.Actors
+﻿namespace snooker_scorer.Actors
 {
     public partial class BreakCounterActor
     {
@@ -20,16 +14,10 @@ namespace snooker_scorer.Actors
 
         public class CurrentBreakRequest
         {
-            public CurrentBreakRequest()
-            {
-            }
         }
 
         public class EndOfBreak
         {
-            public EndOfBreak()
-            {
-            }
         }
     }
 }

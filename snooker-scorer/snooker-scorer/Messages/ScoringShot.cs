@@ -2,11 +2,11 @@
 {
     public class ScoringShot
     {
-        public int Value { get; private set; }
-
         public ScoringShot(int value)
         {
             Value = value;
         }
+
+        public int Value { get; private set; }
     }
 }

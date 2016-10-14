@@ -255,3 +255,6 @@ paket-files/
 **/*.ncrunchproject
 **/*.ncrunchsolution
 **/*.ncrunchsolution.user
+
+# VS2015
+**/Visual Studio*

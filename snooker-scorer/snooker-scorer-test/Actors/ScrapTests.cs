@@ -1,16 +1,15 @@
-﻿using Akka.Actor;
-using Akka.TestKit.NUnit3;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace snooker_scorer_test.Actors
+﻿namespace snooker_scorer_test.Actors
 {
-    public class StatusCheck { }
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Akka.Actor;
+    using Akka.TestKit.NUnit3;
+    using NUnit.Framework;
+
+    public class StatusCheck
+    {
+    }
 
     public class Parent : ReceiveActor
     {
@@ -18,13 +17,13 @@ namespace snooker_scorer_test.Actors
 
         public Parent(Props child1Props, Props child2Props)
         {
-            _children = new List<IActorRef> { Context.ActorOf(child1Props), Context.ActorOf(child2Props) };
+            _children = new List<IActorRef> {Context.ActorOf(child1Props), Context.ActorOf(child2Props)};
             Receive<StatusCheck>(msg => HandleStatusCheck());
         }
 
         public Parent(IActorRef child1, IActorRef child2)
         {
-            _children = new List<IActorRef> { child1, child2 };
+            _children = new List<IActorRef> {child1, child2};
             Receive<StatusCheck>(msg => HandleStatusCheck());
         }
 

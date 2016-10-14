@@ -1,15 +1,14 @@
-﻿using Akka.Actor;
-using Akka.Event;
-using System;
-using System.Collections.Generic;
-
-namespace snooker_scorer.Actors
+﻿namespace snooker_scorer.Actors
 {
+    using System;
+    using System.Collections.Generic;
+    using Akka.Actor;
+    using Akka.Event;
+
     public partial class GameManagerActor : ReceiveActor
     {
-        private readonly ILoggingAdapter _log = Context.GetLogger();
-
         private readonly Dictionary<Guid, IActorRef> _games;
+        private readonly ILoggingAdapter _log = Context.GetLogger();
 
         public GameManagerActor()
         {
@@ -23,12 +22,12 @@ namespace snooker_scorer.Actors
                 var player2Id = Guid.NewGuid();
                 var id = Guid.NewGuid();
                 var game = Context.ActorOf(
-                        GameActor.Props(id,
-                            player1Id,
-                            PlayerActor.Props(player1Id, msg.Player1, 1),
-                            player2Id,
-                            PlayerActor.Props(player2Id, msg.Player2, 2)),
-                        $"Game:{id}");
+                    GameActor.Props(id,
+                        player1Id,
+                        PlayerActor.Props(player1Id, msg.Player1, 1),
+                        player2Id,
+                        PlayerActor.Props(player2Id, msg.Player2, 2)),
+                    $"Game:{id}");
                 _games.Add(id, game);
                 Sender.Tell(new CreateGameResponse(id));
             });

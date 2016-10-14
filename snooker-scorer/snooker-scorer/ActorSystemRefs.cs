@@ -1,12 +1,7 @@
-﻿using Akka.Actor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace snooker_scorer
+﻿namespace snooker_scorer
 {
+    using Akka.Actor;
+
     public static class ActorSystemRefs
     {
         public static ActorSystem ActorSystem;

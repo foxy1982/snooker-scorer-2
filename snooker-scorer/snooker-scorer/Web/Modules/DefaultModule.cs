@@ -1,11 +1,10 @@
 ﻿namespace snooker_scorer.Web.Modules
 {
+    using System.Linq;
     using Actors;
     using Akka.Actor;
     using Nancy;
     using Nancy.ModelBinding;
-    using System;
-    using System.Linq;
 
     public partial class DefaultModule : NancyModule
     {
@@ -26,7 +25,7 @@
                 var response =
                     ActorSystemRefs.Actors.GameManager.Ask(new GameManagerActor.CreateGameRequest(request.Player1, request.Player2)).Result as GameManagerActor.CreateGameResponse;
 
-                return Negotiate.WithModel(new { id = response.Id }).WithStatusCode(HttpStatusCode.Created);
+                return Negotiate.WithModel(new {id = response.Id}).WithStatusCode(HttpStatusCode.Created);
             };
 
             Get["/game/{id:guid}"] = _ =>

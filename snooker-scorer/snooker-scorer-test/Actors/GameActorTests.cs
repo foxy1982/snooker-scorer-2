@@ -1,27 +1,16 @@
-﻿using Akka.Actor;
-using Akka.TestKit;
-using Akka.TestKit.NUnit3;
-using NUnit.Framework;
-using snooker_scorer.Actors;
-using System;
-using System.Linq;
-
-namespace snooker_scorer_test.Actors
+﻿namespace snooker_scorer_test.Actors
 {
+    using System;
+    using System.Linq;
+    using Akka.Actor;
+    using Akka.TestKit;
+    using Akka.TestKit.NUnit3;
+    using NUnit.Framework;
+    using snooker_scorer.Actors;
+
     [TestFixture]
     public class GameActorTests : TestKit
     {
-        private Guid _id = Guid.NewGuid();
-        private Guid _player1Id = Guid.Parse("00000000-0000-0000-0000-000000000001");
-        private Guid _player2Id = Guid.Parse("00000000-0000-0000-0000-000000000002");
-        private string _player1Name = "Player 1";
-        private string _player2Name = "Player 2";
-
-        private TestProbe _player1;
-        private TestProbe _player2;
-
-        private IActorRef _target;
-
         [SetUp]
         public void SetUp()
         {
@@ -44,26 +33,25 @@ namespace snooker_scorer_test.Actors
             Shutdown();
         }
 
+        private readonly Guid _id = Guid.NewGuid();
+        private readonly Guid _player1Id = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        private readonly Guid _player2Id = Guid.Parse("00000000-0000-0000-0000-000000000002");
+        private readonly string _player1Name = "Player 1";
+        private readonly string _player2Name = "Player 2";
+
+        private TestProbe _player1;
+        private TestProbe _player2;
+
+        private IActorRef _target;
+
         [Test]
-        public void ShouldRequestStatusFromPlayers()
+        public void ShouldAwardFoulPointsToOtherPlayer()
         {
-            _target.Tell(new GameActor.StatusRequest());
+            var shotValue = 6;
+            _target.Tell(new GameActor.FoulCommittedCommand(_player2Id, shotValue));
 
-            _player1.ExpectMsg<PlayerActor.StatusRequest>();
-            _player2.ExpectMsg<PlayerActor.StatusRequest>();
-            _player1.Reply(new PlayerActor.Status(_player1Id, _player1Name, 1, 0, new PlayerActor.Status.FoulCount(0, 0)));
-            _player2.Reply(new PlayerActor.Status(_player2Id, _player2Name, 2, 0, new PlayerActor.Status.FoulCount(0, 0)));
-
-            var response = ExpectMsg<GameActor.StatusResponse>();
-
-            Assert.That(response, Is.Not.Null);
-            Assert.That(response.Id, Is.EqualTo(_id));
-            Assert.That(response.Players.First().Id, Is.EqualTo(_player1Id));
-            Assert.That(response.Players.First().Name, Is.EqualTo(_player1Name));
-            Assert.That(response.Players.First().Score, Is.EqualTo(0));
-            Assert.That(response.Players.Last().Id, Is.EqualTo(_player2Id));
-            Assert.That(response.Players.Last().Name, Is.EqualTo(_player2Name));
-            Assert.That(response.Players.Last().Score, Is.EqualTo(0));
+            var awardMessage = _player1.ExpectMsg<PlayerActor.AwardFoulPointsCommand>();
+            Assert.That(awardMessage.Value, Is.EqualTo(shotValue));
         }
 
         [Test]
@@ -88,13 +76,25 @@ namespace snooker_scorer_test.Actors
         }
 
         [Test]
-        public void ShouldAwardFoulPointsToOtherPlayer()
+        public void ShouldRequestStatusFromPlayers()
         {
-            var shotValue = 6;
-            _target.Tell(new GameActor.FoulCommittedCommand(_player2Id, shotValue));
+            _target.Tell(new GameActor.StatusRequest());
 
-            var awardMessage = _player1.ExpectMsg<PlayerActor.AwardFoulPointsCommand>();
-            Assert.That(awardMessage.Value, Is.EqualTo(shotValue));
+            _player1.ExpectMsg<PlayerActor.StatusRequest>();
+            _player2.ExpectMsg<PlayerActor.StatusRequest>();
+            _player1.Reply(new PlayerActor.Status(_player1Id, _player1Name, 1, 0, new PlayerActor.Status.FoulCount(0, 0)));
+            _player2.Reply(new PlayerActor.Status(_player2Id, _player2Name, 2, 0, new PlayerActor.Status.FoulCount(0, 0)));
+
+            var response = ExpectMsg<GameActor.StatusResponse>();
+
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Id, Is.EqualTo(_id));
+            Assert.That(response.Players.First().Id, Is.EqualTo(_player1Id));
+            Assert.That(response.Players.First().Name, Is.EqualTo(_player1Name));
+            Assert.That(response.Players.First().Score, Is.EqualTo(0));
+            Assert.That(response.Players.Last().Id, Is.EqualTo(_player2Id));
+            Assert.That(response.Players.Last().Name, Is.EqualTo(_player2Name));
+            Assert.That(response.Players.Last().Score, Is.EqualTo(0));
         }
     }
 }

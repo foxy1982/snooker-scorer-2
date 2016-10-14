@@ -1,8 +1,8 @@
-﻿using Akka.Actor;
-using System;
-
-namespace snooker_scorer.Actors
+﻿namespace snooker_scorer.Actors
 {
+    using System;
+    using Akka.Actor;
+
     public partial class GameManagerActor
     {
         public class CreateGameRequest

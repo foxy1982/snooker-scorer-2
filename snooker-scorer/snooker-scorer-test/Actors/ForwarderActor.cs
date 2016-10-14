@@ -1,20 +1,19 @@
-﻿using Akka.Actor;
-using System;
-
-namespace snooker_scorer_test.Actors
+﻿namespace snooker_scorer_test.Actors
 {
+    using Akka.Actor;
+
     public class ForwarderActor : UntypedActor
     {
-        private readonly IActorRef target;
+        private readonly IActorRef _target;
 
         public ForwarderActor(IActorRef target)
         {
-            this.target = target;
+            _target = target;
         }
 
-        protected override void OnReceive(Object msg)
+        protected override void OnReceive(object msg)
         {
-            target.Forward(msg);
+            _target.Forward(msg);
         }
     }
 }
