@@ -1,2 +1,1 @@
 # snooker-scorer-2
-
